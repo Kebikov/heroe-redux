@@ -16,3 +16,31 @@ export const heroesFetchingError = () => {
         type: 'HEROES_FETCHING_ERROR'
     }
 }
+
+export const heroesDelete = (arr) => {
+    return {
+        type: 'HEROES_DELETE',
+        payload: arr
+    }
+}
+
+export const heroesAdd = (arr) => {
+    return {
+        type: 'HEROES_ADD_NEW',
+        payload: arr
+    }
+}
+
+export const spendFiltersHeroes = (filters) => {
+    return {
+        type: 'SPEND_FILTERS_HEROES',
+        payload: filters
+    }
+}
+
+export const curentFilterHeroes = (currentFilter) => {
+    return {
+        type: 'CURENT_FILTER_HIROES',
+        payload: currentFilter
+    }
+}

@@ -1,8 +1,9 @@
 import {useHttp} from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 
-import { heroesFetching, heroesFetched, heroesFetchingError } from '../../actions';
+import { heroesFetching, heroesFetched, heroesFetchingError, spendFiltersHeroes } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
@@ -13,18 +14,38 @@ import Spinner from '../spinner/Spinner';
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const {heroes, heroesLoadingStatus} = useSelector(state => state);
-    const dispatch = useDispatch();
-    const {request} = useHttp();
-
     useEffect(() => {
         dispatch(heroesFetching());
         request("http://localhost:3001/heroes")
             .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()))
+            .catch(() => dispatch(heroesFetchingError()));
 
-        // eslint-disable-next-line
+        dispatch(heroesFetching());
+        request("http://localhost:3001/filters")
+            .then(data => dispatch(spendFiltersHeroes(data)))
+            .catch(() => dispatch(heroesFetchingError()))
     }, []);
+
+    //* code 
+    const createfilterHeroes = createSelector(
+        (state) => state.filters.curentFilterHeroes,
+        (state) => state.heroes.heroesLoadingStatus,
+        (state) => state.heroes.heroes,
+        (curentFilterHeroes, heroesLoadingStatus, heroesAll) => {
+            if(curentFilterHeroes === 'all') {
+                 let heroes = heroesAll;
+                return {curentFilterHeroes, heroesLoadingStatus, heroes};
+            }else{
+                let heroes = heroesAll.filter(item => item.element === curentFilterHeroes);
+                return {curentFilterHeroes, heroesLoadingStatus, heroes};
+            }
+        }
+    )
+    const filterHeroes = useSelector(createfilterHeroes);
+    const {heroesLoadingStatus, heroes} = filterHeroes;
+
+    const dispatch = useDispatch();
+    const {request} = useHttp();
 
     if (heroesLoadingStatus === "loading") {
         return <Spinner/>;
@@ -38,14 +59,17 @@ const HeroesList = () => {
         }
 
         return arr.map(({id, ...props}) => {
-            return <HeroesListItem key={id} {...props}/>
-        })
+            return <HeroesListItem key={id} id={id} {...props}/>
+        });
     }
 
     const elements = renderHeroesList(heroes);
+
+    //* return 
     return (
         <ul>
-            {elements}
+            {console.log('render')}
+            {elements.length === 0 ? <h5 className="text-center mt-5">Героев пока нет</h5> : elements}
         </ul>
     )
 }

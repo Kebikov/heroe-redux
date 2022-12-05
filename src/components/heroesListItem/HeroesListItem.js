@@ -1,6 +1,13 @@
+import { useDispatch } from 'react-redux';
+import { heroesDelete, heroesFetchingError } from '../../actions/index';
+import {useHttp} from '../../hooks/http.hook';
 
-const HeroesListItem = ({name, description, element}) => {
 
+const HeroesListItem = ({name, description, element, id}) => {
+    const dispatch = useDispatch();
+    const {request} = useHttp();
+
+    //* code 
     let elementClassName;
 
     switch (element) {
@@ -20,19 +27,25 @@ const HeroesListItem = ({name, description, element}) => {
             elementClassName = 'bg-warning bg-gradient';
     }
 
+    const deleteChar = (id) => {
+        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+            .then(() =>  dispatch(heroesDelete(id)))
+            .catch(() => dispatch(heroesFetchingError()));
+    };
+
     return (
         <li 
             className={`card flex-row mb-4 shadow-lg text-white ${elementClassName}`}>
             <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg" 
-                 className="img-fluid w-25 d-inline" 
-                 alt="unknown hero" 
-                 style={{'objectFit': 'cover'}}/>
+                className="img-fluid w-25 d-inline" 
+                alt="unknown hero" 
+                style={{'objectFit': 'cover'}}/>
             <div className="card-body">
                 
                 <h3 className="card-title">{name}</h3>
                 <p className="card-text">{description}</p>
             </div>
-            <span className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
+            <span onClick={() => deleteChar(id)} className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
                 <button type="button" className="btn-close btn-close" aria-label="Close"></button>
             </span>
         </li>
