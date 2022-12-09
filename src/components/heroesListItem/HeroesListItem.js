@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { heroesDelete, heroesFetchingError } from '../../actions/index';
+import { heroesDelete, heroesFetchingError } from '../heroesList/heroesSlice';
 import {useHttp} from '../../hooks/http.hook';
 
 
