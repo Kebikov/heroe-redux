@@ -14,9 +14,15 @@
     },
     {
       "name": "Gen",
-      "description": "dfd",
-      "element": "water",
-      "id": "25089a04-2054-458c-a7fc-e9173ff52a49"
+      "description": "ffffff",
+      "element": "Я владею элементом...",
+      "id": "f209a008-f5e8-4fb7-b1c3-76c6873f7660"
+    },
+    {
+      "name": "dd",
+      "description": "dd",
+      "element": "wind",
+      "id": "c39d8dd4-ff31-49c5-a767-4926bfe0fbba"
     }
   ],
   "filters": [

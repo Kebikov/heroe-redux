@@ -1,29 +1,16 @@
-import {useHttp} from '../../hooks/http.hook';
+import { useHttp } from '../../hooks/http.hook';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 
-import { heroesFetching, heroesFetched, heroesFetchingError, spendFiltersHeroes } from '../../actions';
+import { fetchHeroes, fetchFilters } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
-//= Задача для этого компонента:
-// При клике на "крестик" идет удаление персонажа из общего состояния
-
-//= Усложненная задача:
-// Удаление идет и с json файла при помощи метода DELETE
-
 const HeroesList = () => {
     useEffect(() => {
-        dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
-
-        dispatch(heroesFetching());
-        request("http://localhost:3001/filters")
-            .then(data => dispatch(spendFiltersHeroes(data)))
-            .catch(() => dispatch(heroesFetchingError()))
+        dispatch(fetchHeroes(request));
+        dispatch(fetchFilters(request));
     }, []);
 
     //* code 
@@ -33,7 +20,7 @@ const HeroesList = () => {
         (state) => state.heroes.heroes,
         (curentFilterHeroes, heroesLoadingStatus, heroesAll) => {
             if(curentFilterHeroes === 'all') {
-                 let heroes = heroesAll;
+                let heroes = heroesAll;
                 return {curentFilterHeroes, heroesLoadingStatus, heroes};
             }else{
                 let heroes = heroesAll.filter(item => item.element === curentFilterHeroes);

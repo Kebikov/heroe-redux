@@ -1,3 +1,4 @@
+
 export const heroesFetching = () => {
     return {
         type: 'HEROES_FETCHING'
@@ -39,8 +40,22 @@ export const spendFiltersHeroes = (filters) => {
 }
 
 export const curentFilterHeroes = (currentFilter) => {
-    return {
-        type: 'CURENT_FILTER_HIROES',
-        payload: currentFilter
-    }
+        return {
+            type: 'CURENT_FILTER_HIROES',
+            payload: currentFilter 
+        }
+}
+
+export const fetchHeroes = (request) => (dispatch) => {
+    dispatch('HEROES_FETCHING');
+    request("http://localhost:3001/heroes")
+            .then(data => dispatch(heroesFetched(data)))
+            .catch(() => dispatch(heroesFetchingError()));
+}
+
+export const fetchFilters = (request) => (dispatch) => {
+    dispatch(heroesFetching);
+    request("http://localhost:3001/filters")
+        .then(data => dispatch(spendFiltersHeroes(data)))
+        .catch(() => dispatch(heroesFetchingError()));
 }
